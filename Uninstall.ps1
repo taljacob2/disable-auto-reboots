@@ -1,3 +1,5 @@
-Schtasks /Delete /TN "Disable-AutoReboots" -f
+$taskName = "Disable-AutoReboots"
 
-Write-Host "Done!"
+schtasks /Delete /TN $taskName -f
+
+Write-Host "Task '$taskName' uninstalled!"
