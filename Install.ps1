@@ -1,9 +1,15 @@
 param (
-  [parameter()][string]$User = "system"
+    [Parameter()][string]$User = "SYSTEM"
 )
 
 $thisPath = (Get-Location).Path
+$scriptPath = Join-Path $thisPath "Disable-AutoReboots.ps1"
 
-Schtasks /Create /TN "Disable-AutoReboots" /TR "powershell -c 'cd $thisPath; $thisPath\Disable-AutoReboots.ps1'" /RU "$User" /SC HOURLY /ST "00:00" /RL HIGHEST /F
+$taskName = "Disable-AutoReboots"
+$taskCommand = "powershell.exe"
+$taskArguments = "-WindowStyle Hidden -ExecutionPolicy Bypass -File `"$scriptPath`""
 
-Write-Host "Done!"
+# Create the scheduled task
+schtasks /Create /TN $taskName /TR "$taskCommand $taskArguments" /RU $User /SC HOURLY /ST 00:00 /RL HIGHEST /F
+
+Write-Host "Task '$taskName' scheduled!"
